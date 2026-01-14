@@ -20,7 +20,8 @@ conda env create -n GraphAnchor -f graphanchor_environment.yml
 
 ## Prepare Datasets
 **Our code and data are developed based on [DeepNote](https://github.com/thunlp/DeepNote).**
-Follow the DeepNote's instruction to prepare the datasets:
+
+Follow the DeepNote's instruction to prepare the datasets:\
 All corpus and evaluation files should be placed in the `/data` directory. You can download the experimental data (MuSiQue, HotpotQA, 2WikiMultihopqa) [here](https://drive.google.com/drive/folders/1NeEm-r7l43MQxGS1n7jJ8tPvltgcaPjY?usp=sharing). And you can download Bamboogle data [here](https://huggingface.co/datasets/chiayewken/bamboogle). For Bamboogle dataset, we use the same corpus as HotpotQA dataset.
 
 ## Build Indices 
@@ -39,5 +40,5 @@ You can configure the model path in the `./config/config.yaml` file.
 ```bash
 python GraphAnchor.py --method GraphAnchor --retrieve_top_k 5 --dataset hotpotqa --max_step 3 --model qwen2.5-7b-instruct 
 ```
-❗️Note: max_step should be set to the maximum number of retrieval steps minus one.
+❗️Note: max_step should be set to the maximum number of retrieval steps minus one.\
 The predicted results and evaluation metrics will be automatically saved in the `output/{dataset}/` directory. The evaluation results can be found at the end of the file.
