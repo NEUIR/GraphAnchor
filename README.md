@@ -22,7 +22,8 @@ conda env create -n GraphAnchor -f graphanchor_environment.yml
 **Our code and data are developed based on [DeepNote](https://github.com/thunlp/DeepNote).**
 
 Follow the DeepNote's instruction to prepare the datasets:\
-All corpus and evaluation files should be placed in the `/data` directory. You can download the experimental data (MuSiQue, HotpotQA, 2WikiMultihopqa) [here](https://drive.google.com/drive/folders/1NeEm-r7l43MQxGS1n7jJ8tPvltgcaPjY?usp=sharing). And you can download Bamboogle data [here](https://huggingface.co/datasets/chiayewken/bamboogle). For Bamboogle dataset, we use the same corpus as HotpotQA dataset.
+All corpus and evaluation files should be placed in the `/data` directory. You can download the experimental data (MuSiQue, HotpotQA, 2WikiMultihopqa) [here](https://drive.google.com/drive/folders/1NeEm-r7l43MQxGS1n7jJ8tPvltgcaPjY?usp=sharing). \
+And you can download Bamboogle data [here](https://huggingface.co/datasets/chiayewken/bamboogle). For Bamboogle dataset, we use the same corpus as HotpotQA dataset.
 
 ## Build Indices 
 #### For HotpotQA, 2WikiMQA, and MusiQue
