@@ -1,0 +1,7 @@
+Answer the question based on the given document. Only give me the answer and do not output any other words.
+
+The following are given document:
+{refs}
+
+Question: {query}
+Answer:

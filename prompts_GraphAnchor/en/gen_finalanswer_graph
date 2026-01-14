@@ -1,0 +1,7 @@
+Answer the question based on constructed graph information. Only give me the answer and do not output any other words.
+
+Constructed graph information:
+{knowledge_graph}
+
+Question: {query}
+Answer:
