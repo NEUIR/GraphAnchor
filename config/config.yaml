@@ -1,0 +1,4 @@
+model:
+  llama3.1-8b-instruct: "" # path to llama3.1-8b-instruct model
+  bge-large-en-v1.5: "" # path to bge-large-en-v1.5 model
+  qwen2.5-7b-instruct: "" # path to qwen2.5-7b-instruct model
