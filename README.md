@@ -1,7 +1,9 @@
 # GraphAnchor: Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation
-Source code for our paper ''Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation''(https://www.arxiv.org/pdf/2601.16462)
+Source code for our paper:\
+[Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation](https://www.arxiv.org/pdf/2601.16462)
 
 Click the link below to view our papers:
+
 <a href='https://www.arxiv.org/pdf/2601.16462'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
 
 If you find this work useful, please cite our paper and give us a shining star 🌟
