@@ -1,5 +1,21 @@
 # GraphAnchor: Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation
-Source code for our paper ''Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation''
+Source code for our paper ''Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation''(https://www.arxiv.org/pdf/2601.16462)
+
+Click the link below to view our papers:
+<a href='https://www.arxiv.org/pdf/2601.16462'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
+
+If you find this work useful, please cite our paper and give us a shining star 🌟
+```
+@article{liu2026graphanchoredknowledgeindexingretrievalaugmented,
+      title={Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation}, 
+      author={Zhenghao Liu and Mingyan Wu and Xinze Li and Yukun Yan and Shuo Wang and Cheng Yang and Minghe Yu and Zheni Zeng and Maosong Sun},
+      year={2026},
+      eprint={2601.16462},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2601.16462}, 
+}
+```
 
 ## Overview
 ![](fig/GraphAnchor.jpg)
@@ -43,3 +59,9 @@ python GraphAnchor.py --method GraphAnchor --retrieve_top_k 5 --dataset hotpotqa
 ```
 ❗️Note: max_step should be set to the maximum number of retrieval steps minus one.\
 The predicted results and evaluation metrics will be automatically saved in the `output/{dataset}/` directory. The evaluation results can be found at the end of the file.
+
+## Contact
+If you have questions, suggestions, and bug reports, please email:
+```
+2401930@stu.neu.edu.cn 
+```
