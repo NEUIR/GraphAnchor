@@ -1,0 +1,7 @@
+Answer the question based on constructed knowledge index information. Only give me the answer and do not output any other words.
+
+Constructed knowledge index information:
+{knowledge_index}
+
+Question: {query}
+Answer:

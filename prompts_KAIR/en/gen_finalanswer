@@ -1,0 +1,9 @@
+Answer the question based on the given document and constructed knowledge index information. Only give me the answer and do not output any other words.
+
+Constructed knowledge index information:
+{knowledge_index}
+The following are given document:
+{refs}
+
+Question: {query}
+Answer:

@@ -28,7 +28,7 @@ def call_local(prompt_file, variable_dict):
     if "llama" in args.model:
         model_template = "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
         prompt = model_template.format(prompt=prompt.format(**variable_dict))
-    if "qwen" in args.model or "minicpm" in args.model:
+    if "qwen" in args.model:
         model_template = "<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
         prompt = model_template.format(prompt=prompt.format(**variable_dict))
     
@@ -63,21 +63,21 @@ def extract_judgement_tag(output: str) -> str:
     return None
 
 
-def extract_graph_tag(output: str) -> str | None:
+def extract_index_tag(output: str) -> str | None:
     """
-    Extract the content of the <graph> tag.
+    Extract the content of the <index> tag.
     Supports two scenarios:
-    1. <graph> ... </graph>
-    2. <graph> ...   (When the closing tag is missing, extract until the end of the text)
+    1. <index> ... </index>
+    2. <index> ...   (When the closing tag is missing, extract until the end of the text)
     """
     
-    match = re.search(r"<graph>\s*([\s\S]*?)\s*</graph>", 
+    match = re.search(r"<index>\s*([\s\S]*?)\s*</index>", 
                       output, re.IGNORECASE)
     if match:
         return match.group(1).strip()
 
     
-    match_open = re.search(r"<graph>\s*([\s\S]*)", output, re.IGNORECASE)
+    match_open = re.search(r"<index>\s*([\s\S]*)", output, re.IGNORECASE)
     if match_open:
         return match_open.group(1).strip()
 
@@ -121,7 +121,7 @@ def is_directory_empty(directory_path: str) -> bool:
 
 
 def call_llm_template(template, variables):
-    return call_llm(f"../prompts_GraphAnchor/{LAUGUAGE}/{template}", variables)
+    return call_llm(f"../prompts_KAIR/{LAUGUAGE}/{template}", variables)
 
 
 def init_reasoning(query, refs):
@@ -139,14 +139,14 @@ def step_reasoning_plus(query, refs, previous_reasoning):
 
 def gen_answer(query, refs):
 
-    template = "gen_answer_graph"
+    template = "gen_answer_index"
     return call_llm_template(template, {"refs": refs, "query": query,})
 
-# for GraphAnchor question answering
-def gen_finalanswer(query, refs, knowledge_graph):
+# for KAIR question answering
+def gen_finalanswer(query, refs, knowledge_index):
     
     template = "gen_finalanswer"
-    return call_llm_template(template, {"refs": refs, "knowledge_graph": knowledge_graph, "query": query,})
+    return call_llm_template(template, {"refs": refs, "knowledge_index": knowledge_index, "query": query,})
 
  
 def gen_passageanswer(query, refs):
@@ -154,15 +154,15 @@ def gen_passageanswer(query, refs):
     template = "gen_finalanswer_passage"
     return call_llm_template(template, {"refs": refs, "query": query,})
  
-def gen_graphanswer(query, knowledge_graph):
+def gen_indexanswer(query, knowledge_index):
     
-    template = "gen_finalanswer_graph"
-    return call_llm_template(template, {"knowledge_graph": knowledge_graph, "query": query,})
+    template = "gen_finalanswer_index"
+    return call_llm_template(template, {"knowledge_index": knowledge_index, "query": query,})
 
 
 
-def GraphAnchor(doc_id, query, answer, top_k):
-    retrieve_refs_log, llm_times, knowledgegraph_log, query_log, query_list ,top5passage_log, refine_passage, refs_plus_newretri, reasoning_log = [], 0, [], [], [], [], [], [], []
+def KAIR(doc_id, query, answer, top_k):
+    retrieve_refs_log, llm_times, knowledgeindex_log, query_log, query_list ,top5passage_log, refine_passage, refs_plus_newretri, reasoning_log = [], 0, [], [], [], [], [], [], []
     step = 0
     reasoning_retry_need = 0
     ground_truth = answer
@@ -177,10 +177,10 @@ def GraphAnchor(doc_id, query, answer, top_k):
 
     initial_reasoning = init_reasoning(query, context)
     judgement_status = extract_judgement_tag(initial_reasoning)
-    knowledge_graph = extract_graph_tag(initial_reasoning)
+    knowledge_index = extract_index_tag(initial_reasoning)
     next_query = extract_question_tag(initial_reasoning)
     reasoning_log.append({"reasoning": initial_reasoning, "step": step, "flag": "init_reasoning"})
-    knowledgegraph_log.append({"knowledge_graph": knowledge_graph, "step": step, "flag": "init_graph"})
+    knowledgeindex_log.append({"knowledge_index": knowledge_index, "step": step, "flag": "init_index"})
     
     if (next_query == None) or (judgement_status == None):
             retry_initial_reasoning = init_reasoning_plus(query, context, initial_reasoning)
@@ -214,10 +214,10 @@ def GraphAnchor(doc_id, query, answer, top_k):
             steps_reasoning = step_reasoning(query, context, steps_reasoning)
             llm_times += 1
             judgement_status = extract_judgement_tag(steps_reasoning)
-            knowledge_graph = extract_graph_tag(steps_reasoning)
+            knowledge_index = extract_index_tag(steps_reasoning)
             next_query = extract_question_tag(steps_reasoning)
             reasoning_log.append({"reasoning": steps_reasoning, "step": step, "flag": "step_reasoning"})
-            knowledgegraph_log.append({"knowledge_graph": knowledge_graph, "step": step, "flag": "updated_graph"})
+            knowledgeindex_log.append({"knowledge_index": knowledge_index, "step": step, "flag": "updated_index"})
 
             if (new_query == None) or (judgement_status == None):
                 retry_steps_reasoning = step_reasoning_plus(query, context, steps_reasoning)
@@ -238,9 +238,9 @@ def GraphAnchor(doc_id, query, answer, top_k):
         return {"id": doc_id, "question": query, "ground_truth": ground_truth, "skip": True, "skip_reason": f"stutas_failed: {e}"}
         
         
-    final_answer = gen_finalanswer(query, context, knowledge_graph)
+    final_answer = gen_finalanswer(query, context, knowledge_index)
     passage_answer = gen_passageanswer(query, context)
-    graph_answer = gen_graphanswer(query, knowledge_graph)
+    index_answer = gen_indexanswer(query, knowledge_index)
     llm_times += 1
         
     
@@ -252,9 +252,9 @@ def GraphAnchor(doc_id, query, answer, top_k):
         "initial_answer": initial_answer,
         "final_output": final_answer,
         "passage_output": passage_answer,
-        "graph_output": graph_answer,
+        "index_output": index_answer,
         "query_log": query_log,
-        "knowledgegraph_log": knowledgegraph_log,
+        "knowledgeindex_log": knowledgeindex_log,
         "retrieve_ref_log": retrieve_refs_log,
         "reasoning_log": reasoning_log,
         "refine_passage_log" : top5passage_log,
@@ -266,7 +266,7 @@ def process_doc_cell(idx, doc_cell, args):
     id_new, query, answer = idx, doc_cell["question"], doc_cell["answer"]
 
     if args.method == "base":
-        prompt_path = f"../prompts_GraphAnchor/{LAUGUAGE}"
+        prompt_path = f"../prompts_KAIR/{LAUGUAGE}"
         gen_name = args.method
         refs = retrieve(args.dataset, query=query, topk=args.retrieve_top_k)
         
@@ -282,7 +282,7 @@ def process_doc_cell(idx, doc_cell, args):
 
         return {"id": id_new, "query": query, "ground_truth": answer, "final_output": output, "refs":refs}
     else:
-        return GraphAnchor(id_new, query, answer, top_k=args.retrieve_top_k)
+        return KAIR(id_new, query, answer, top_k=args.retrieve_top_k)
 
 
 if __name__ == "__main__":
@@ -334,8 +334,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--method",
         type=str,
-        default="GraphAnchor",
-        choices=["GraphAnchor", "base"],
+        default="KAIR",
+        choices=["KAIR", "base"],
         help="Method to use",
     )
     parser.add_argument(
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         "--retrieve_method",
         type=str,
         default="emb",
-        help="Retrieval method to use (es: ElasticSearch, emb: Dense Retrieval)",
+        help="Retrieval method to use (emb: Dense Retrieval)",
     )
     args = parser.parse_args()
 
@@ -424,7 +424,7 @@ if __name__ == "__main__":
         resume_data = []
         filepath = (
             f"{save_path}/topk-{args.retrieve_top_k}-{formatted_time}.jsonl"
-            if args.method != "GraphAnchor"
+            if args.method != "KAIR"
             else f"{save_path}/topk-{args.retrieve_top_k}__max_step-{args.max_step}__max_fail_step-{args.max_fail_step}-{formatted_time}.jsonl"
         )
     logger.info(f"The predicted results will be saved in '{filepath}'.")
@@ -447,10 +447,10 @@ if __name__ == "__main__":
     predictions = [data["final_output"] for data in all_result]
     answers = [data["ground_truth"] for data in all_result]
     
-    if args.method == "GraphAnchor":
+    if args.method == "KAIR":
         passage_predictions = [data["passage_output"] for data in all_result if data.get("passage_output") not in [None, "", []]]
-        graph_predictions = [data["graph_output"] for data in all_result if data.get("graph_output") not in [None, "", []]]
-        passage_graph_answers = [data["ground_truth"] for data in all_result if data.get("passage_output") not in [None, "", []] and data.get("graph_output") not in [None, "", []]]
+        index_predictions = [data["index_output"] for data in all_result if data.get("index_output") not in [None, "", []]]
+        passage_index_answers = [data["ground_truth"] for data in all_result if data.get("passage_output") not in [None, "", []] and data.get("index_output") not in [None, "", []]]
 
     
     acc = acc_score(predictions, answers)
@@ -458,28 +458,28 @@ if __name__ == "__main__":
     em = compute_exact(predictions, answers)
     eval_result = {"Acc": acc, "F1": f1, "EM": em}
     
-    if args.method == "GraphAnchor":
-        passage_acc = acc_score(passage_predictions, passage_graph_answers)
-        passage_f1 = F1_scorer(passage_predictions, passage_graph_answers)
-        passage_em = compute_exact(passage_predictions, passage_graph_answers)
+    if args.method == "KAIR":
+        passage_acc = acc_score(passage_predictions, passage_index_answers)
+        passage_f1 = F1_scorer(passage_predictions, passage_index_answers)
+        passage_em = compute_exact(passage_predictions, passage_index_answers)
         passage_eval_result = {"passage_Acc": passage_acc, "passage_F1": passage_f1, "passage_EM": passage_em}
         
-        graph_acc = acc_score(graph_predictions, passage_graph_answers)
-        graph_f1 = F1_scorer(graph_predictions, passage_graph_answers)
-        graph_em = compute_exact(graph_predictions, passage_graph_answers)
-        graph_eval_result = {"graph_Acc": graph_acc, "graph_F1": graph_f1, "graph_EM": graph_em}
+        index_acc = acc_score(index_predictions, passage_index_answers)
+        index_f1 = F1_scorer(index_predictions, passage_index_answers)
+        index_em = compute_exact(index_predictions, passage_index_answers)
+        index_eval_result = {"index_Acc": index_acc, "index_F1": index_f1, "index_EM": index_em}
     
 
     if eval_result:
         with open(filepath, "a", buffering=1) as fout:
             fout.write(json.dumps(eval_result, ensure_ascii=False) + "\n")
-            if args.method == "GraphAnchor":
+            if args.method == "KAIR":
                 fout.write(json.dumps(passage_eval_result, ensure_ascii=False) + "\n")
-                fout.write(json.dumps(graph_eval_result, ensure_ascii=False) + "\n")
+                fout.write(json.dumps(index_eval_result, ensure_ascii=False) + "\n")
 
 
     logger.info(f"eval result: {eval_result}")
-    if args.method == "GraphAnchor":
+    if args.method == "KAIR":
         logger.info(f"passage eval result: {passage_eval_result}")
-        logger.info(f"graph eval result: {graph_eval_result}")
+        logger.info(f"index eval result: {index_eval_result}")
 
