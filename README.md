@@ -20,7 +20,7 @@ If you find this work useful, please cite our paper and give us a shining star ð
 ``` -->
 
 ## Overview
-![](fig/KAIR.jpg)
+![](fig/KAIR.png)
 KAIR is a Knowledge Anchoring framework for Iterative Retrieval that anchors knowledge within retrieved knowledge to guide LLMs to locate the key information. During iterative retrieval, KAIR progressively updates the knowledge index to anchor salient evidence from retrieved documents. The evolving index serves as a navigational anchoring index that enables the LLM to assess knowledge sufficiency and formulate subsequent retrieval queries. Finally, KAIR generates answers by jointly leveraging the retrieved documents and the finalized anchoring index.
 
 ## Set Up
