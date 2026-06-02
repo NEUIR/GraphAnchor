@@ -1,6 +1,6 @@
 # Finding What Matters: Anchoring Context Knowledge with Evolving Indices for Iterative Retrieval
-<!-- Source code for our paper:\
-[Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation](https://www.arxiv.org/pdf/2601.16462)
+Source code for our paper:\
+[Finding What Matters: Anchoring Context Knowledge with Evolving Indices for Iterative Retrieval](https://arxiv.org/abs/2601.16462)
 
 Click the link below to view our papers:
 
@@ -8,16 +8,16 @@ Click the link below to view our papers:
 
 If you find this work useful, please cite our paper and give us a shining star 🌟
 ```
-@article{liu2026graphanchoredknowledgeindexingretrievalaugmented,
-      title={Graph-Anchored Knowledge Indexing for Retrieval-Augmented Generation}, 
-      author={Zhenghao Liu and Mingyan Wu and Xinze Li and Yukun Yan and Shuo Wang and Cheng Yang and Minghe Yu and Zheni Zeng and Maosong Sun},
+@article{wu2026findingmattersanchoringcontext,
+      title={Finding What Matters: Anchoring Context Knowledge with Evolving Indices for Iterative Retrieval}, 
+      author={Mingyan Wu and Zhenghao Liu and Xinze Li and Yuqing Lan and Yukun Yan and Shuo Wang and Cheng Yang and Minghe Yu and Zheni Zeng and Maosong Sun},
       year={2026},
       eprint={2601.16462},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
       url={https://arxiv.org/abs/2601.16462}, 
 }
-``` -->
+```
 
 ## Overview
 ![](fig/KAIR.png)
